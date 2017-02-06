@@ -1,0 +1,32 @@
+{
+  "name": "sworn",
+  "version": "1.0.0",
+  "description": "A promises/A+ complaint JavaScript library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ocpu/sworn.git"
+  },
+  "keywords": [
+    "future",
+    "promise",
+    "promises",
+    "promises-a",
+    "promises-aplus",
+    "deferred",
+    "deferreds",
+    "thenable"
+  ],
+  "author": "Martin Hövre <sickan843@live.se>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ocpu/sworn/issues"
+  },
+  "homepage": "https://github.com/ocpu/sworn#readme",
+  "dependencies": {
+    "asap": "^2.0.5"
+  }
+}

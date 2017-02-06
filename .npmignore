@@ -1,0 +1,8 @@
+.idea/
+Lofte.iml
+Lofte.ipr
+Lofte.iws
+spec/
+.travis.yml
+.gitignore
+example.js
