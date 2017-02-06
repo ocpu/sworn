@@ -4,7 +4,8 @@
   "description": "A promises/A+ complaint JavaScript library",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node_modules/.bin/promises-aplus-tests test/adapter.js",
+    "test-complience": "node_modules/.bin/promises-aplus-tests test/adapter.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,9 @@
     "url": "https://github.com/ocpu/sworn/issues"
   },
   "homepage": "https://github.com/ocpu/sworn#readme",
+  "devDependencies": {
+    "promises-aplus-tests": "*"
+  },
   "dependencies": {
     "asap": "^2.0.5"
   }

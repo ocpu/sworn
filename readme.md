@@ -8,28 +8,10 @@ A promise library based of Promises/A+ specification and more
 [![codecov][img-cc]][url-cc]
 
 
-If you do not know anything about promises I recommend you check out the [MDN][url-mdn-promises] article about promises.
-
-
-## Quick access
-
-1. [A beginning example](#an-example)
-2. [Getting installed](#getting-installed)
-
-## An example
-
-```js
-var Sworn = require("sworn");
-
-Sworn.resolve("Supports")
-    .then(function (text) {
-        return text + " es5"
-    })
-    .then(text => `${text} and above`)
-    .then(console.log) // output: Supports es5 and above
-```
 ## Getting installed
 - Install with NPM: `npm install sworn`
+
+## License
 
 [url-wiki]: https://github.com/ocpu/Sworn/wiki "Sworn wiki"
 [url-mdn-promises]: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise

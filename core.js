@@ -21,8 +21,6 @@ function tryCall(fn, ctx, args) {
 //
 // once the state is no longer pending (state = 0) it is immutable
 
-// 
-
 module.exports = Promise
 
 function Promise(fn) {
@@ -49,7 +47,7 @@ function handle(self, deferred) {
 function handleResolved(self, deferred) {
     asap(function () {
         var cb = self._state === 1 ? deferred.onFulfilled : deferred.onRejected
-        if (cb === null) {
+        if (typeof cb !== 'function') {
             if (self._state === 1)
                 resolve(deferred.promise, self._value)
             else reject(deferred.promise, self._value)
@@ -122,22 +120,16 @@ function doResolve(fn, promise) {
     }
 }
 
-function apply(fn, self, args) {
-    var d = Promise.defer()
-    args[args.length++] = makeCallback(d)
-    var res = tryCall(fn, self, args)
-    if (res === ERROR)
-        d.reject(ERROR.value)
-    else if (res)
-        d.resolve(res)
-    return d.promise
-}
+Promise.prototype.resolve = resolve
+Promise.prototype.reject = reject
 
-function makeCallback(d) {
-    return function (err, res) {
-        if (err) d.reject(err)
-        d.resolve(res)
-    }
+function apply(fn, self, args) {
+    return new Promise(function (resolve, reject) {
+        var ret = tryCall(fn, self, args)
+        if (ret === ERROR)
+            reject(ERROR.value)
+        resolve(ret)
+    })
 }
 
 Promise.wrap = function (fn) {
