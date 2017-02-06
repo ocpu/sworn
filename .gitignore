@@ -1,0 +1,7 @@
+.idea/
+coverage/
+Lofte.iml
+Lofte.ipr
+Lofte.iws
+node_modules/
+*.log
