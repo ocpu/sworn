@@ -2,36 +2,62 @@
 
 var asap = require('asap/raw')
 
-var ERROR = {value:null}
+var ERROR = {value:undefined}
 
-function tryCall(fn, ctx, args) {
+function getThen(obj) {
     try {
-        fn.apply(ctx, args)
+        return obj.then
     } catch (e) {
         ERROR.value = e
         return ERROR
     }
 }
 
-// States:
-//
-// 0 - pending
-// 1 - fulfilled with _value
-// 2 - rejected with _value
-//
-// once the state is no longer pending (state = 0) it is immutable
+function tryCall1(fn, arg) {
+    try {
+        return fn(arg)
+    } catch (e) {
+        ERROR.value = e
+        return ERROR
+    }
+}
+
+function tryCall2(fn, arg1, arg2) {
+    try {
+        return fn(arg1, arg2)
+    } catch (e) {
+        ERROR.value = e
+        return ERROR
+    }
+}
 
 module.exports = Promise
 
-function Promise(fn) {
-    if (typeof fn !== 'function')
-        return
+/**
+ * @param {function} resolver
+ * @constructor
+ */
+function Promise(resolver) {
+    /**@type {Number}
+     * @private*/
     this._state = 0
+    /**@type {*}
+     * @private*/
     this._value = void 0
-    this._deferred = void 0
-    doResolve(fn, this)
+    /**@type {Array.<Handler>}
+     * @private*/
+    this._deferred = []
+    if (typeof resolver !== 'function')
+        return
+    execute(this, resolver)
 }
 
+/**
+ *
+ * @param {function(result)} onFulfilled
+ * @param {function(reason)} onRejected
+ * @returns {Promise}
+ */
 Promise.prototype.then = function(onFulfilled, onRejected) {
     var res = new Promise
     handle(this, new Handler(onFulfilled, onRejected, res))
@@ -40,11 +66,11 @@ Promise.prototype.then = function(onFulfilled, onRejected) {
 
 function handle(self, deferred) {
     if (self._state === 0)
-        return void (self._deferred = deferred)
-    handleResolved(self, deferred)
+        return void (self._deferred.push(deferred))
+    asyncHandle(self, deferred)
 }
 
-function handleResolved(self, deferred) {
+function asyncHandle(self, deferred) {
     asap(function () {
         var cb = self._state === 1 ? deferred.onFulfilled : deferred.onRejected
         if (typeof cb !== 'function') {
@@ -53,7 +79,7 @@ function handleResolved(self, deferred) {
             else reject(deferred.promise, self._value)
             return
         }
-        var ret = tryCall(cb, void 0, [self._value])
+        var ret = tryCall1(cb, self._value)
         if (ret === ERROR)
             reject(deferred.promise, ERROR.value)
         else resolve(deferred.promise, ret)
@@ -62,19 +88,15 @@ function handleResolved(self, deferred) {
 
 function resolve(self, newValue) {
     if (newValue === self)
-        return reject(self, new TypeError('A promise cannot resolve itself.'))
+        return void reject(self, new TypeError('A promise cannot resolve itself.'))
     if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
-        var then = tryCall(function (newValue) {
-            return newValue.then
-        }, void 0, [newValue])
+        var then = getThen(newValue)
         if (then === ERROR)
-            return reject(self, ERROR.value)
-        if (then === self.then && newValue instanceof Promise) {
-            newValue = newValue._value
-        } else if (typeof then === 'function') {
-            doResolve(then.bind(newValue), self)
-            return
-        }
+            return void reject(self, ERROR.value)
+        /*if (then === self.then && newValue instanceof Promise)
+            newValue = newValue._value*/
+        else if (typeof then === 'function')
+            return void execute(self, then.bind(newValue))
     }
     self._state = 1
     self._value = newValue
@@ -88,8 +110,9 @@ function reject(self, reason) {
 }
 
 function end(self) {
+    /* istanbul ignore else */
     if (self._deferred) {
-        handle(self, self._deferred)
+        self._deferred.forEach(handle.bind(void 0, self))
         self._deferred = null
     }
 }
@@ -100,29 +123,16 @@ function Handler(onFulfilled, onRejected, promise){
     this.promise = promise
 }
 
-/**
- * Makes sure onFulfilled and onRejected are only called once.
- */
-function doResolve(fn, promise) {
-    var done = false
-    var res = tryCall(fn, void 0, [function (value) {
-        if (done) return
-        done = true
-        resolve(promise, value)
+function execute(promise, fn) {
+    var done = false, res = tryCall2(fn, function (value) {
+        return!done?done=!resolve(promise,value):void 0
     }, function (reason) {
-        if (done) return
-        done = true
-        reject(promise, reason)
-    }])
-    if (!done && res === ERROR) {
-        done = true
-        reject(promise, ERROR.value)
-    }
+        return!done?done=!reject(promise,reason):void 0
+    })
+    !done&&res===ERROR?done=!reject(promise,ERROR.value):void 0
 }
 
-Promise.prototype.resolve = resolve
-Promise.prototype.reject = reject
-
+/*
 function apply(fn, self, args) {
     return new Promise(function (resolve, reject) {
         var ret = tryCall(fn, self, args)
@@ -139,9 +149,9 @@ Promise.wrap = function (fn) {
         return apply(fn, this, a)
     }
 }
-
+*/
 //Promise.wrap(require('fs').readFile)('.\\server\\start.js', 'utf-8').then(console.log, console.error)
-
+//
 /*new Promise(function (resolve) {
  resolve(new Promise(function (resolve) {
  resolve('some value')

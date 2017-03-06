@@ -1,8 +1,9 @@
+coverage/
 .idea/
 Lofte.iml
 Lofte.ipr
 Lofte.iws
-spec/
+test/
 .travis.yml
 .gitignore
 example.js

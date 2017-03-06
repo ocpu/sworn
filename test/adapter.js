@@ -1,7 +1,12 @@
-var Promise = require('../')
+var Promise = require('../core')
 
 module.exports = {
-    deferred: Promise.defer,
-    resolved: Promise.resolve,
-    rejected: Promise.reject
+    deferred: function () {
+        var defer = {}
+        defer.promise = new Promise(function (resolve, reject) {
+            defer.resolve = resolve
+            defer.reject = reject
+        })
+        return defer
+    }
 }
