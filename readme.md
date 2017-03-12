@@ -1,5 +1,9 @@
+<a href="http://promisesaplus.com/">
+    <img src="http://promisesaplus.com/assets/logo-small.png" alt="Promises/A+ logo"
+         title="Promises/A+ 1.1 compliant" align="right" />
+</a>
+
 # Sworn
-A promise library based of Promises/A+ specification and more
 
 [![Build Status][img-travis]][url-travis]
 [![NPM version][img-npm]][url-npm]
@@ -7,25 +11,41 @@ A promise library based of Promises/A+ specification and more
 [![License][img-license]][url-license]
 [![codecov][img-cc]][url-cc]
 
+Sworn is a promise library based on Promises/A+ specification and other features. 
 
-## Getting installed
-- Install with NPM: `npm install sworn`
+See the [website](https://opencubes.io/docs/sworn) for documentation.
 
 ## License
+MIT License
 
-[url-wiki]: https://github.com/ocpu/Sworn/wiki "Sworn wiki"
-[url-mdn-promises]: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
-[url-PA+]: https://promisesaplus.com/
+Copyright (c) 2017 Martin Hövre
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
 [url-travis]: https://travis-ci.org/ocpu/sworn
 [url-npm]: https://npmjs.org/package/sworn
-[url-license]: LICENSE.md
+[url-license]: license.md
 [url-downloads]: https://npmjs.org/package/sworn
 [url-cc]: https://codecov.io/gh/ocpu/sworn
 
-[img-PA+]: https://promisesaplus.com/assets/logo-small.png "Promises/A+ 1.0 compliant"
 [img-travis]: https://img.shields.io/travis/ocpu/sworn.svg?style=flat-square
 [img-npm]: https://img.shields.io/npm/v/sworn.svg?style=flat-square
 [img-license]: https://img.shields.io/npm/l/sworn.svg?style=flat-square
 [img-downloads]: https://img.shields.io/npm/dm/sworn.svg?style=flat-square
-[img-meme]: https://i.imgflip.com/1f2lkm.jpg "Wow so original"
 [img-cc]: https://img.shields.io/codecov/c/github/ocpu/sworn/master.svg?style=flat-square

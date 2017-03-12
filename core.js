@@ -1,15 +1,15 @@
 'use strict'
 
-var asap = require('asap/raw')
+var asap = typeof model !== 'undefined' && typeof model.exports !== 'undefined' ? require('asap/raw') : function (handler) { setTimeout(handler, 0) }
 
-var ERROR = {value:undefined}
+var errorObject = {value:undefined}
 
 function getThen(obj) {
     try {
         return obj.then
     } catch (e) {
-        ERROR.value = e
-        return ERROR
+        errorObject.value = e
+        return errorObject
     }
 }
 
@@ -17,8 +17,8 @@ function tryCall1(fn, arg) {
     try {
         return fn(arg)
     } catch (e) {
-        ERROR.value = e
-        return ERROR
+        errorObject.value = e
+        return errorObject
     }
 }
 
@@ -26,15 +26,15 @@ function tryCall2(fn, arg1, arg2) {
     try {
         return fn(arg1, arg2)
     } catch (e) {
-        ERROR.value = e
-        return ERROR
+        errorObject.value = e
+        return errorObject
     }
 }
 
 module.exports = Promise
 
 /**
- * @param {function} resolver
+ * @param {function(resolve, reject)} resolver
  * @constructor
  */
 function Promise(resolver) {
@@ -80,8 +80,8 @@ function asyncHandle(self, deferred) {
             return
         }
         var ret = tryCall1(cb, self._value)
-        if (ret === ERROR)
-            reject(deferred.promise, ERROR.value)
+        if (ret === errorObject)
+            reject(deferred.promise, errorObject.value)
         else resolve(deferred.promise, ret)
     })
 }
@@ -91,10 +91,8 @@ function resolve(self, newValue) {
         return void reject(self, new TypeError('A promise cannot resolve itself.'))
     if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
         var then = getThen(newValue)
-        if (then === ERROR)
-            return void reject(self, ERROR.value)
-        /*if (then === self.then && newValue instanceof Promise)
-            newValue = newValue._value*/
+        if (then === errorObject)
+            return void reject(self, errorObject.value)
         else if (typeof then === 'function')
             return void execute(self, then.bind(newValue))
     }
@@ -129,31 +127,5 @@ function execute(promise, fn) {
     }, function (reason) {
         return!done?done=!reject(promise,reason):void 0
     })
-    !done&&res===ERROR?done=!reject(promise,ERROR.value):void 0
+    !done&&res===errorObject?done=!reject(promise,errorObject.value):void 0
 }
-
-/*
-function apply(fn, self, args) {
-    return new Promise(function (resolve, reject) {
-        var ret = tryCall(fn, self, args)
-        if (ret === ERROR)
-            reject(ERROR.value)
-        resolve(ret)
-    })
-}
-
-Promise.wrap = function (fn) {
-    return function() {
-        var l = arguments.length, a = new Array(l)
-        while (l--) a[l] = arguments[l]
-        return apply(fn, this, a)
-    }
-}
-*/
-//Promise.wrap(require('fs').readFile)('.\\server\\start.js', 'utf-8').then(console.log, console.error)
-//
-/*new Promise(function (resolve) {
- resolve(new Promise(function (resolve) {
- resolve('some value')
- }))
- }).then(console.log, console.error)*/
