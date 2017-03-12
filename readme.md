@@ -3,8 +3,6 @@
          title="Promises/A+ 1.1 compliant" align="right" />
 </a>
 
-# Sworn
-
 [![Build Status][img-travis]][url-travis]
 [![NPM version][img-npm]][url-npm]
 [![NPM Downloads][img-downloads]][url-downloads]
