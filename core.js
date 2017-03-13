@@ -1,8 +1,9 @@
 'use strict'
 
-var asap = typeof model !== 'undefined' && typeof model.exports !== 'undefined' ? require('asap/raw') : function (handler) { setTimeout(handler, 0) }
+/* istanbul ignore next */
+var asap = typeof module !== 'undefined' && typeof module.exports !== 'undefined' ? require('asap/raw') : function (handler) { setTimeout(handler, 0) }
 
-var errorObject = {value:undefined}
+var errorObject = { value: undefined }
 
 function getThen(obj) {
     try {
@@ -58,7 +59,7 @@ function Promise(resolver) {
  * @param {function(reason)} onRejected
  * @returns {Promise}
  */
-Promise.prototype.then = function(onFulfilled, onRejected) {
+Promise.prototype.then = function (onFulfilled, onRejected) {
     var res = new Promise
     handle(this, new Handler(onFulfilled, onRejected, res))
     return res
@@ -108,14 +109,12 @@ function reject(self, reason) {
 }
 
 function end(self) {
-    /* istanbul ignore else */
-    if (self._deferred) {
+    if (self._deferred.length !== 0)
         self._deferred.forEach(handle.bind(void 0, self))
-        self._deferred = null
-    }
+    self._deferred = null
 }
 
-function Handler(onFulfilled, onRejected, promise){
+function Handler(onFulfilled, onRejected, promise) {
     this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : void 0
     this.onRejected = typeof onRejected === 'function' ? onRejected : void 0
     this.promise = promise
@@ -123,9 +122,9 @@ function Handler(onFulfilled, onRejected, promise){
 
 function execute(promise, fn) {
     var done = false, res = tryCall2(fn, function (value) {
-        return!done?done=!resolve(promise,value):void 0
+        return !done ? done = !resolve(promise, value) : void 0
     }, function (reason) {
-        return!done?done=!reject(promise,reason):void 0
+        return !done ? done = !reject(promise, reason) : void 0
     })
-    !done&&res===errorObject?done=!reject(promise,errorObject.value):void 0
+    !done && res === errorObject ? done = !reject(promise, errorObject.value) : void 0
 }

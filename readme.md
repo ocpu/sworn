@@ -9,9 +9,9 @@
 [![License][img-license]][url-license]
 [![codecov][img-cc]][url-cc]
 
-Sworn is a promise library based on Promises/A+ specification and other features. 
+Sworn is a promise library based on Promises/A+ specification and other features.
 
-See the [website](https://opencubes.io/docs/sworn) for documentation.
+See the ~~[website](https://opencubes.io/docs/sworn)~~ for documentation.
 
 ## License
 MIT License
