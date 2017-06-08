@@ -1,7 +1,8 @@
 'use strict'
 
 /* istanbul ignore next */
-var asap = typeof module !== 'undefined' && typeof module.exports !== 'undefined' ? require('asap/raw') : function (handler) { setTimeout(handler, 0) }
+//var asap = typeof module !== 'undefined' && typeof module.exports !== 'undefined' ? require('asap/raw') : function (handler) { setTimeout(handler, 0) }
+var asap = require('asap')
 
 var errorObject = { value: undefined }
 
@@ -66,8 +67,10 @@ Promise.prototype.then = function (onFulfilled, onRejected) {
 }
 
 function handle(self, deferred) {
-    if (self._state === 0)
-        return void (self._deferred.push(deferred))
+    if (self._state === 0) {
+        self._deferred.push(deferred)
+        return
+    }
     asyncHandle(self, deferred)
 }
 
@@ -121,6 +124,8 @@ function Handler(onFulfilled, onRejected, promise) {
 }
 
 function execute(promise, fn) {
+    if (typeof fn !== 'function')
+        return
     var done = false, res = tryCall2(fn, function (value) {
         return !done ? done = !resolve(promise, value) : void 0
     }, function (reason) {
