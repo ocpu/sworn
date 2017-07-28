@@ -35,24 +35,30 @@ function tryCall2(fn, arg1, arg2) {
 
 module.exports = Promise
 
+var noop = function(){}
+var noobj = {}
 /**
  * @param {function(resolve, reject)} resolver
  * @constructor
  */
 function Promise(resolver) {
-    /**@type {Number}
-     * @private*/
-    this._state = 0
-    /**@type {*}
-     * @private*/
-    this._value = void 0
     /**@type {Array.<Handler>}
      * @private*/
-    this._deferred = []
-    if (typeof resolver !== 'function')
+    this._deferred = [noobj,noobj,noobj,noobj,noobj]
+    if (resolver == noop)
         return
     execute(this, resolver)
 }
+
+/**@type {Number}
+ * @private*/
+Promise.prototype._state = 0
+/**@type {*}
+ * @private*/
+Promise.prototype._value = void 0
+/**@type {Number}
+ * @private*/
+Promise.prototype._length = 0
 
 /**
  *
@@ -61,16 +67,13 @@ function Promise(resolver) {
  * @returns {Promise}
  */
 Promise.prototype.then = function (onFulfilled, onRejected) {
-    var res = new Promise
+    var res = new Promise(noop)
     handle(this, new Handler(onFulfilled, onRejected, res))
     return res
 }
 
 function handle(self, deferred) {
-    if (self._state === 0) {
-        self._deferred.push(deferred)
-        return
-    }
+    if (self._state === 0) return void (self._deferred[self._length++] = deferred)
     asyncHandle(self, deferred)
 }
 
@@ -81,7 +84,7 @@ function asyncHandle(self, deferred) {
             if (self._state === 1)
                 resolve(deferred.promise, self._value)
             else reject(deferred.promise, self._value)
-            return
+            return void 0
         }
         var ret = tryCall1(cb, self._value)
         if (ret === errorObject)
@@ -112,8 +115,10 @@ function reject(self, reason) {
 }
 
 function end(self) {
-    if (self._deferred.length !== 0)
-        self._deferred.forEach(handle.bind(void 0, self))
+    if (self._length !== 0) {
+        var i = 0
+        while (i != self._length) asyncHandle(self, self._deferred[i++])
+    }
     self._deferred = null
 }
 
