@@ -44,7 +44,7 @@ var noobj = {}
 function Promise(resolver) {
     /**@type {Array.<Handler>}
      * @private*/
-    this._deferred = [noobj,noobj,noobj,noobj,noobj]
+    this._deferred = [noobj]
     if (resolver == noop)
         return
     execute(this, resolver)
