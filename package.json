@@ -2,27 +2,23 @@
   "name": "sworn",
   "version": "1.0.0",
   "description": "A promises/A+ complaint JavaScript library",
+  "author": "Martin Hövre <martin.hovre@opencubes.io>",
   "main": "index.js",
   "scripts": {
     "test": "istanbul cover node_modules/promises-aplus-tests/lib/cli.js test/adapter.js",
     "test-complience": "node_modules/.bin/promises-aplus-tests test/adapter.js"
   },
-  "repository": "ocpu/sworn",
   "keywords": [
     "future",
     "promise",
     "promises",
     "promises-a",
     "promises-aplus",
-    "deferred",
-    "deferreds",
     "thenable"
   ],
-  "author": "Martin Hövre <sickan843@live.se>",
+  "repository": "ocpu/sworn",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ocpu/sworn/issues"
-  },
+  "bugs": "https://github.com/ocpu/sworn/issues",
   "homepage": "https://github.com/ocpu/sworn#readme",
   "devDependencies": {
     "expect.js": "^0.3.1",

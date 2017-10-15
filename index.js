@@ -1,4 +1,4 @@
-module.exports = Promise = require('./core')
+var Promise = module.exports = require('./core')
 
 Promise.prototype['catch'] = Promise.prototype['fail'] = function (onRejected) {
     return this.then(void 0, onRejected)
