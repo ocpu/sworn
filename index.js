@@ -82,3 +82,7 @@ Promise.cancel = function (executor, onCancel) {
         }
     }
 }
+
+Promise.callback = function (promise, callback) {
+    promise.then(callback.bind(null, void 0), callback)
+}

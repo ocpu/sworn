@@ -18,6 +18,7 @@ declare var Sworn: {
         promise: Sworn<T>
         cancel: () => void
     }
+    callback<T>(promise: Promise<T>, callback: (reason: Error | string, value: T) => void): void
 }
 
 declare module "sworn" {
