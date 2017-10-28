@@ -1,5 +1,6 @@
 interface Sworn<T> extends Promise<T> {
-    fail<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>
+    fail<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Sworn<T | TResult>
+    delay(ms: Number): Sworn<T>
 }
 
 declare var Sworn: {

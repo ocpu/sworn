@@ -4,6 +4,16 @@ Promise.prototype['catch'] = Promise.prototype['fail'] = function (onRejected) {
     return this.then(void 0, onRejected)
 }
 
+Promise.prototype.delay = function (ms) {
+    return this.then(function (value) {
+        return new Promise(function (resolve) {
+            setTimeout(function () {
+                resolve(value)
+            }, ms)
+        })
+    })
+}
+
 Promise.resolve = function (value) {
     return new Promise(function (resolve) {
         resolve(value)
