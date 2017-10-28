@@ -14,6 +14,10 @@ declare var Sworn: {
         reject: (reason: Error | string) => void
         promise: Sworn<T>
     }
+    cancel<T>(resolver: (resolve?: (value: T) => void, reject?: (reason: Error | string) => void) => void, onCancel: () => void): {
+        promise: Sworn<T>
+        cancel: () => void
+    }
 }
 
 declare module "sworn" {

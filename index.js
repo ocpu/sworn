@@ -67,3 +67,18 @@ Promise.deferred = function () {
     })
     return defer
 }
+
+Promise.cancel = function (executor, onCancel) {
+    var promise = new Promise(executor),
+        deferred = Promise.deferred()
+    return {
+        promise: Promise.race([
+            promise,
+            deferred.promise
+        ]),
+        cancel: function() {
+            onCancel()
+            deferred.resolve()
+        }
+    }
+}
